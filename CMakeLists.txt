@@ -3,19 +3,24 @@ project(raygraphic)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-#set(CMAKE_OBJC_STANDARD_REQUIRED OFF)
 
 # Dependencies
-#include(cmake/FindRaylib.cmake)
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+find_package(cmakeutils REQUIRED)
+include(${cmakeutils_SOURCE_DIR}/ToolBSL.cmake)
+
+bsl_store()
 
 find_package(igraphic REQUIRED)
 find_package(maths REQUIRED)
 find_package(raylib REQUIRED)
 
+bsl_restore()
+
 set(SOURCE_FILES raylib.cpp)
 
-add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
+add_library(${PROJECT_NAME} ${SOURCE_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/window
@@ -25,7 +30,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC maths igraphic raylib)
+target_link_libraries(${PROJECT_NAME} PUBLIC maths system igraphic raylib)
 
 # Checks if OSX and links appropriate frameworks (Only required on MacOS)
 if (APPLE)
