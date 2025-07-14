@@ -55,7 +55,6 @@ class RayWindow : public graphic::IWindow {
         
         bool pollEvent() override {
             static bool firstCall = true;
-            std::cout << "firstCall" << firstCall << std::endl;
             firstCall = !firstCall;
             return !firstCall;
         }

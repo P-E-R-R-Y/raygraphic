@@ -12,6 +12,7 @@ include(${cmakeutils_SOURCE_DIR}/ToolBSL.cmake)
 
 bsl_store()
 
+find_package(system REQUIRED)
 find_package(igraphic REQUIRED)
 find_package(maths REQUIRED)
 find_package(raylib REQUIRED)
