@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-find_package(cmakeutils REQUIRED)
+find_package(CMakeUtils REQUIRED)
 include(${cmakeutils_SOURCE_DIR}/ToolBSL.cmake)
 
 bsl_store()
