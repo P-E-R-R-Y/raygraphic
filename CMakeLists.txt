@@ -9,7 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #----------- dependencies -----------
 
 list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-
 find_package(CMakeUtils REQUIRED)
 include(${cmakeutils_SOURCE_DIR}/ToolBSL.cmake)
 
