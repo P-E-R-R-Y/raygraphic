@@ -16,22 +16,28 @@
 #define RAYLIB_CPP_
 
 //Raylib
-#include "window/RayWindow.hpp"
+#include "RayWindow.hpp"
+#include "RayCamera.hpp"
 
-#include "graphic/RaySprite.hpp"
-#include "graphic/RayPolygon.hpp"
-#include "graphic/RayText.hpp"
+#include "RaySprite.hpp"
+#include "RayPolygon.hpp"
+#include "RayText.hpp"
+#include "RayModel.hpp"
 
-#include "graphic/RayModel.hpp"
-#include "window/RayCamera.hpp"
+#include "RayKeyboard.hpp"
+#include "RayMouse.hpp"
+#include "RayEvent.hpp"
 
-#include "event/RayKeyboard.hpp"
-#include "event/RayMouse.hpp"
-#include "event/RayEvent.hpp"
+#include "RaySound.hpp"
+#include "RayMusic.hpp"
+#include "RayGraphicModule.hpp"
 
-#include "audio/RaySound.hpp"
-#include "audio/RayMusic.hpp"
-
+extern "C" IModule *createModule() {
+    return new RayGraphicModule();
+}
+extern "C" void deleteModule(IModule *rgm) {
+    delete rgm;
+}
 /**
  * @brief create a window
  * 
@@ -40,7 +46,7 @@
  * @param title
  * @return graphic::IWindow*
  */
-extern "C" graphic::IWindow *createWindow(__int32_t screenWidth, __int32_t screenHeight, std::string title) {
+extern "C" graphic::IWindow *createWindow(int32_t screenWidth, int32_t screenHeight, std::string title) {
     return new RayWindow(screenWidth, screenHeight, std::string("Raylib " + title));
 }
 
@@ -59,7 +65,7 @@ extern "C" void deleteWindow(graphic::IWindow *window) {
  * @param position
  * @return graphic::ICamera*
  */
-extern "C" graphic::ICamera *createCamera(__v3f_t position) {
+extern "C" graphic::ICamera *createCamera(Vector3f position) {
     return new RayCamera();
 }
 
@@ -138,7 +144,7 @@ extern "C" void deleteMouse(graphic::IMouse *mouse) {
  * @param points
  * @return graphic::IPolygon*
  */
-extern "C" graphic::IPolygon *createPolygon(std::vector<__v2f_t> points) {
+extern "C" graphic::IPolygon *createPolygon(std::vector<Vector2f> points) {
     return new RayPolygon(points);
 }
 

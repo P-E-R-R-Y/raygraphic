@@ -11,16 +11,18 @@
 
 #ifndef RAYWINDOW_HPP_
 #define RAYWINDOW_HPP_
-//Raylib
-#include <raylib.h>
+
+//Raylib (without conflict)
+#include "RaylibAliases.hpp"
 
 //Interface
 #include "IWindow.hpp"
+
 //encapsulation
-#include "../graphic/RayPolygon.hpp"
-#include "../graphic/RaySprite.hpp"
-#include "../graphic/RayModel.hpp"
-#include "../graphic/RayText.hpp"
+#include "RayPolygon.hpp"
+#include "RaySprite.hpp"
+#include "RayModel.hpp"
+#include "RayText.hpp"
 #include "RayCamera.hpp"
 
 #include <iostream>
@@ -31,7 +33,7 @@
 class RayWindow : public graphic::IWindow {
 
     public:
-        RayWindow(__int32_t screenWidth, __int32_t screenHeight, std::string title) {
+        RayWindow(int32_t screenWidth, int32_t screenHeight, std::string title) {
             InitWindow(screenWidth, screenHeight, title.c_str());
 //            SetWindowState(FLAG_WINDOW_RESIZABLE);
 //            SetWindowMinSize(800, 600);
@@ -63,18 +65,18 @@ class RayWindow : public graphic::IWindow {
         };
         
         //TIME
-        void setFrameLimit(__int32_t limit) override {
+        void setFrameLimit(int32_t limit) override {
             SetTargetFPS(limit);
         };
 
-        __int32_t getDelta() override {
-            return static_cast<__int32_t>(GetFrameTime() * 1000);
+        int32_t getDelta() override {
+            return static_cast<int32_t>(GetFrameTime() * 1000);
         };
 
         //2D
         void beginDraw() override {
             BeginDrawing();
-            ClearBackground(BLACK);
+            ClearBackground({ 0, 0, 0, 255 });
         };
 
         void endDraw() override {
@@ -133,7 +135,7 @@ void RayWindow::drawSprite(graphic::ISprite *sprite) {
     Rectangle posSize = {float(raysprite->getPosition().x), float(raysprite->getPosition().y),
                         float(raysprite->getSize().x), float(raysprite->getSize().y) };
 
-    DrawTexturePro(raysprite->_texture, raysprite->_crop, posSize, {0,0}, raysprite->_rotation, WHITE);
+    DrawTexturePro(raysprite->_texture, raysprite->_crop, posSize, {0,0}, raysprite->_rotation, { 255, 255, 255, 255 });
 };
 
 //3D
@@ -147,8 +149,8 @@ void RayWindow::beginMode3(graphic::ICamera *camera) {
 void RayWindow::drawModel(graphic::IModel *model) {
     RayModel *raymodel = static_cast<RayModel *>(model);
 
-    DrawCubeV(raymodel->_position, raymodel->_size, RED);
-    DrawCubeWiresV(raymodel->_position, raymodel->_size, BLACK);
+    DrawCubeV(raymodel->_position, raymodel->_size, { 255, 0, 0, 255 });
+    DrawCubeWiresV(raymodel->_position, raymodel->_size, { 0, 0, 0, 255 });
 };
 
 void RayWindow::endMode3() {

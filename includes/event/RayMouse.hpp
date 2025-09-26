@@ -12,12 +12,12 @@
 #ifndef RAYMOUSE_HPP_
 #define RAYMOUSE_HPP_
 
+//Raylib (without conflict)
+#include "RaylibAliases.hpp"
+
 //Interface
 #include "IMouse.hpp"
 #include "RayEvent.hpp"
-
-//Raylib
-#include <raylib.h>
 
 /**
  * @brief Raylib Mouse class
@@ -44,10 +44,10 @@ class RayMouse : public graphic::IMouse {
             return IsMouseButtonUp(key);
         }
         
-        __v2f_t getPosition() const override {
+        Vector2f getPosition() const override {
             return {float(GetMouseX()), float(GetMouseY())};
         }
-        void setPosition(__v2f_t position) override {
+        void setPosition(Vector2f position) override {
             SetMousePosition(int(position.x), int(position.y));
         }
 

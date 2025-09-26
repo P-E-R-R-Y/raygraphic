@@ -11,11 +11,12 @@
 #ifndef RAYMUSIC_HPP_
     #define RAYMUSIC_HPP_
 
+    //Raylib (without conflict)
+    #include "RaylibAliases.hpp"
+
     //Interface
     #include "IMusic.hpp"
 
-    //Raylib
-    #include <raylib.h>
 
 
 class RayMusic: public graphic::IMusic {

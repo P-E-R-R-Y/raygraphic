@@ -13,11 +13,11 @@
 #ifndef RAYCAMERA_HPP_
 #define RAYCAMERA_HPP_
 
+//Raylib (without conflict)
+#include "RaylibAliases.hpp"
+
 //Interface
 #include "ICamera.hpp"
-
-//Raylib
-#include <raylib.h>
 
 /**
  * @brief Raylib Camera class
@@ -31,9 +31,9 @@ class RayCamera : public graphic::ICamera {
          */
         RayCamera() {
             _camera = { 0 };
-            _camera.position = (Vector3){ 4.0f, 4.0f, 4.0f };    // Camera position
-            _camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };      // Camera looking at point
-            _camera.up = (Vector3){ 0.f, 1.f, 0.0f };          // Camera up vector (rotation towards target)
+            _camera.position = (RaylibVector3){ 4.0f, 4.0f, 4.0f };    // Camera position
+            _camera.target = (RaylibVector3){ 0.0f, 0.0f, 0.0f };      // Camera looking at point
+            _camera.up = (RaylibVector3){ 0.f, 1.f, 0.0f };          // Camera up vector (rotation towards target)
             _camera.fovy = 60.0f;                                // Camera field-of-view Y
             _camera.projection = CAMERA_PERSPECTIVE;             // Camera projection type
             _mode = CAMERA_FREE;
@@ -83,9 +83,9 @@ class RayCamera : public graphic::ICamera {
         /**
          * @brief Get the Position object
          * 
-         * @return __v3f_t 
+         * @return Vector3f 
          */
-        __v3f_t getPosition() const override {
+        Vector3f getPosition() const override {
             return {_camera.position.x, _camera.position.y, _camera.position.z};
         }
 
@@ -94,7 +94,7 @@ class RayCamera : public graphic::ICamera {
          * 
          * @param position 
          */
-        void setPosition(__v3f_t position) override {
+        void setPosition(Vector3f position) override {
             _camera = {float(position.x), float(position.y), float(position.z)};
         }
         
@@ -131,9 +131,9 @@ class RayCamera : public graphic::ICamera {
         /**
          * @brief Get the Target object
          * 
-         * @return __v3f_t 
+         * @return Vector3f 
          */
-        __v3f_t getTarget() const override {
+        Vector3f getTarget() const override {
             return {_camera.target.x, _camera.target.y, _camera.target.z};
         }
         
@@ -142,16 +142,16 @@ class RayCamera : public graphic::ICamera {
          * 
          * @param target 
          */
-        void setTarget(__v3f_t target) override {
+        void setTarget(Vector3f target) override {
             _camera = {float(target.x), float(target.y), float(target.z)};
         }
 
         /**
          * @brief Get the Up object
          * 
-         * @return __v3f_t 
+         * @return Vector3f 
          */
-        __v3f_t getUp() const override {
+        Vector3f getUp() const override {
             return {_camera.up.x, _camera.up.y, _camera.up.z};
         }
 
@@ -160,7 +160,7 @@ class RayCamera : public graphic::ICamera {
          * 
          * @param up 
          */
-        void setUp(__v3f_t up) override {
+        void setUp(Vector3f up) override {
             _camera.up = {float(up.x), float(up.y), float(up.z)};
         }
 

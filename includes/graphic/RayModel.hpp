@@ -12,11 +12,11 @@
 #ifndef RAYMODEL_HPP_
 #define RAYMODEL_HPP_
 
+//Raylib (without conflict)
+#include "RaylibAliases.hpp"
+
 //Interface
 #include "IModel.hpp"
-
-//Raylib
-#include <raylib.h>
 
 /**
  * @brief Raylib Model class
@@ -35,19 +35,19 @@ class RayModel : public graphic::IModel {
 
         ~RayModel() = default;
 
-        __v3f_t getPosition() const override {
+        Vector3f getPosition() const override {
             return {_position.x, _position.y, _position.z};
         }
 
-        void setPosition(__v3f_t position) override {
+        void setPosition(Vector3f position) override {
             _position = {float(position.x), float(position.y), float(position.z)};
         }
 
         friend class RayWindow;
 
     private:
-        Vector3 _position;
-        Vector3 _size;
+        RaylibVector3 _position;
+        RaylibVector3 _size;
 };
 
 #endif /* !RAYMODEL_HPP_ */

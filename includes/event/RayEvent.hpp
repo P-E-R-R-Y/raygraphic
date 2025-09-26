@@ -12,11 +12,11 @@
 #ifndef RAYEVENT_HPP
 #define RAYEVENT_HPP
 
+//Raylib (without conflict)
+#include "RaylibAliases.hpp"
+
 //Interface
 #include "IEvent.hpp"
-
-//Raylib
-#include <raylib.h>
 
 /**
  * @brief Raylib Event class

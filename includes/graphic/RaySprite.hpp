@@ -13,11 +13,11 @@
 #ifndef RAYSPRITE_HPP_
 #define RAYSPRITE_HPP_
 
+//Raylib (without conflict)
+#include "RaylibAliases.hpp"
+
 //Interface
 #include "ISprite.hpp"
-
-//Raylib
-#include <raylib.h>
 
 /**
  * @brief Raylib Sprite class
@@ -40,18 +40,18 @@ class RaySprite : public graphic::ISprite {
             return IsTextureReady(_texture);
         }
 
-        __v4f_t getBounds() const override {
+        Vector4f getBounds() const override {
             return {_position.x, _position.y, float(_texture.width), float(_texture.height)};
         }
 
-        void setCrop(__v4f_t rect) override {
+        void setCrop(Vector4f rect) override {
             _crop = {float(rect.x), float(rect.y), float(rect.w), float(rect.h)};
         }
 
-        __v2f_t getPosition() const override {
+        Vector2f getPosition() const override {
             return {_position.x, _position.y};
         }
-        void setPosition(__v2f_t position) override {
+        void setPosition(Vector2f position) override {
             _position = {float(position.x), float(position.y)};
         }
 
@@ -67,11 +67,11 @@ class RaySprite : public graphic::ISprite {
             }
         }
 
-        __v2f_t getSize() const override {
+        Vector2f getSize() const override {
             return { float(_texture.width) * _scale.x, float(_texture.height) * _scale.y };
         }
 
-        void setSize(__v2f_t size) override {
+        void setSize(Vector2f size) override {
             _scale = {float(this->getSize().x/float(_texture.width)), float(this->getSize().y/float(_texture.height))};
         }
 
@@ -79,8 +79,8 @@ class RaySprite : public graphic::ISprite {
 
     private:
         Texture2D _texture;
-        Vector2 _position;
-        Vector2 _scale;
+        RaylibVector2 _position;
+        RaylibVector2 _scale;
         Rectangle _crop;
         float _rotation;
 

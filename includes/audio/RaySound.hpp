@@ -12,9 +12,10 @@
 #ifndef RAYSOUND_HPP_
     #define RAYSOUND_HPP_
 
-    #include "ISound.hpp"
+//Raylib (without conflict)
+#include "RaylibAliases.hpp"
 
-    #include <raylib.h>
+#include "ISound.hpp"
 
 class RaySound: public graphic::ISound {
 

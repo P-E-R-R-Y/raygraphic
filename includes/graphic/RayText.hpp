@@ -9,16 +9,18 @@
  */
 
 #ifndef RAYTEXT_HPP_
-    #define RAYTEXT_HPP_
+#define RAYTEXT_HPP_
 
-    //standard
-    #include <string>
+//standard
+#include <string>
+
+//Raylib (without conflict)
+#include "RaylibAliases.hpp"
+
 
     //Interface
     #include "IText.hpp"
 
-    //Raylib
-    #include <raylib.h>
 
 class RayText: public graphic::IText {
 
@@ -26,7 +28,7 @@ class RayText: public graphic::IText {
         RayText(std::string data, std::string font) {
             _data = data;
             _position = {0, 0};
-            _color = Color{255, 255, 255, 255};
+            _color = RaylibColor{255, 255, 255, 255};
             _font = LoadFont(font.c_str());
             _size = 20;
             _spacing = 1;
@@ -63,19 +65,19 @@ class RayText: public graphic::IText {
         }
         
 
-        void setTextColor(__color_t color) override {
-            _color = Color{static_cast<unsigned char>(color.r), static_cast<unsigned char>(color.g), static_cast<unsigned char>(color.b),static_cast<unsigned char>(color.a)};
+        void setTextColor(Color color) override {
+            _color = RaylibColor{static_cast<unsigned char>(color.r), static_cast<unsigned char>(color.g), static_cast<unsigned char>(color.b),static_cast<unsigned char>(color.a)};
         } 
 
-        __color_t getTextColor() const override {
-            return __color_t{_color.r, _color.g, _color.b, _color.a};
+        Color getTextColor() const override {
+            return Color{_color.r, _color.g, _color.b, _color.a};
         } 
 
-        void setPosition(__v2f_t position) override {
-            _position = Vector2{position.x, position.y};
+        void setPosition(Vector2f position) override {
+            _position = RaylibVector2{static_cast<float>(position.x), static_cast<float>(position.y)};
         }
-        __v2f_t getPosition() const override {
-            return __v2f_t{_position.x, _position.y};
+        Vector2f getPosition() const override {
+            return Vector2f{_position.x, _position.y};
         }
 
         void setRotation(float angle) override {
@@ -91,16 +93,16 @@ class RayText: public graphic::IText {
     private:
 
         void updateOrigin() {
-            const Vector2 textSize = MeasureTextEx(_font, _data.c_str(), _size, _spacing);
+            const RaylibVector2 textSize = MeasureTextEx(_font, _data.c_str(), _size, _spacing);
             _origin = { textSize.x / 2, textSize.y / 2 };
         }
 
         std::string _data;
-        Vector2 _position;
-        Color _color;
+        RaylibVector2 _position;
+        RaylibColor _color;
         Font _font;
         unsigned int _size;
-        Vector2 _origin;
+        RaylibVector2 _origin;
         float _rotation;
         float _spacing;
 

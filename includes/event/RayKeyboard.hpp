@@ -12,11 +12,11 @@
 #ifndef RAYKEYBOARD_HPP_
 #define RAYKEYBOARD_HPP_
 
+//Raylib (without conflict)
+#include "RaylibAliases.hpp"
+
 //Interface
 #include "IKeyboard.hpp"
-
-//Raylib
-#include <raylib.h>
 
 //More
 #include <vector>
