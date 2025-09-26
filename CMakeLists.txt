@@ -40,7 +40,25 @@ target_link_libraries(${PROJECT_NAME} PUBLIC system igraphic raylib)
 
 # Checks if OSX and links appropriate frameworks (Only required on MacOS)
 if (APPLE)
-  target_link_libraries(${PROJECT_NAME} PRIVATE "-framework IOKit")
-  target_link_libraries(${PROJECT_NAME} PRIVATE "-framework Cocoa")
-  target_link_libraries(${PROJECT_NAME} PRIVATE "-framework OpenGL")
+  # macOS frameworks
+  target_link_libraries(${PROJECT_NAME} PRIVATE 
+    "-framework IOKit"
+    "-framework Cocoa"
+    "-framework OpenGL"
+  )
+elseif(UNIX)
+    # Linux (Ubuntu, Debian, etc.)
+    find_package(X11 REQUIRED)
+
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+        ${X11_LIBRARIES}
+        m
+        pthread
+        dl
+        GL
+    )
+
+    target_include_directories(${PROJECT_NAME} PRIVATE
+        ${X11_INCLUDE_DIR}
+    )
 endif()
