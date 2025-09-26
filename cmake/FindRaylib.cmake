@@ -3,7 +3,6 @@ set (RAYLIB_VERSION 5.0)
 
 include(FetchContent)
 if (NOT ${name}_FOUND) # If there's none, fetch and build raylib
-    include(FetchContent)
     FetchContent_Declare(
         ${name} #package name
         URL https://github.com/raysan5/raylib/archive/refs/tags/${RAYLIB_VERSION}.tar.gz #where
