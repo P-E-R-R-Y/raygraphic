@@ -1,4 +1,4 @@
-set(name maths)
+set(name igraphic)
 set(tag main)
 
 include(FetchContent)
