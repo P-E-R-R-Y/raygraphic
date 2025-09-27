@@ -29,7 +29,7 @@ public:
         #if defined(__APPLE__)
             "libraygraphic.dylib";
         #else
-            "libRayGraphic.so";
+            "libraygraphic.so";
         #endif
 
         handle = dlopen(libPath, RTLD_LAZY);
