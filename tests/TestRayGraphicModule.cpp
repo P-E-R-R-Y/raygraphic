@@ -65,7 +65,26 @@ DestroyModuleFn RaylibEnv::destroyFn = nullptr;
 using CreateModuleFn = IModule* (*)();
 using DestroyModuleFn = void (*)(IModule*);
 
+#include <filesystem>
+#include <iostream>
+
+void debugListFiles(const std::string& path = ".") {
+    std::cerr << "[DEBUG] Listing files in: " << std::filesystem::absolute(path) << std::endl;
+    try {
+        for (const auto& entry : std::filesystem::directory_iterator(path)) {
+            std::cerr << "  " << entry.path().filename().string();
+            if (entry.is_directory()) {
+                std::cerr << "/";
+            }
+            std::cerr << std::endl;
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "[DEBUG] Failed to list files: " << e.what() << std::endl;
+    }
+}
+
 TEST(RayGraphicModuleTest, LoadLibrary) {
+    debugListFiles();
 #if defined(__APPLE__)
     const char* libPath = "libraygraphic.dylib";
 #elif defined(__linux__)
