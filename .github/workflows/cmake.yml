@@ -38,3 +38,10 @@ jobs:
       # 5️⃣ Lancer les tests avec GoogleTest
       - name: Run tests
         run: ctest --test-dir build --output-on-failure
+
+      # 6️⃣ Récupérer l'artifact
+      - name: Upload build folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifact
+          path: build/

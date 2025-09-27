@@ -53,6 +53,8 @@ elseif(UNIX)
     target_include_directories(${PROJECT_NAME} PRIVATE
         ${X11_INCLUDE_DIR}
     )
+
+    set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 
 #----------- includes -----------
