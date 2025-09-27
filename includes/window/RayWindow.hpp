@@ -33,22 +33,27 @@
 class RayWindow : public graphic::IWindow {
 
     public:
-        RayWindow(int32_t screenWidth, int32_t screenHeight, std::string title) {
+        RayWindow(int32_t screenWidth, int32_t screenHeight, std::string title): quitRequested(false) {
             InitWindow(screenWidth, screenHeight, title.c_str());
 //            SetWindowState(FLAG_WINDOW_RESIZABLE);
 //            SetWindowMinSize(800, 600);
 //            SetWindowMaxSize(1920, 1080);
         };
 
-        ~RayWindow() = default;
+        ~RayWindow() {
+            CloseWindow();
+        };
 
         //GLOBAL
         bool isOpen() override {
-            return !WindowShouldClose() || !IsWindowReady();
+            //IsWindowReady for init fails
+            //WindowShouldClose for escape & alt+f4
+            //quitRequested when user ask to close the app under is own condition
+            return !IsWindowReady() || !WindowShouldClose() || !quitRequested;
         };
 
         void close() override {
-            CloseWindow();
+            quitRequested = true;
         };
 
         //EVENT
@@ -61,6 +66,7 @@ class RayWindow : public graphic::IWindow {
             return !firstCall;
         }
 
+        //not define cause eventClose is internally define using Key::Escape
         void eventClose() override {
         };
         
@@ -112,6 +118,7 @@ class RayWindow : public graphic::IWindow {
         };
 
     private:
+        bool quitRequested;
 };
 
 //2D
