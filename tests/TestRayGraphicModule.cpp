@@ -86,7 +86,7 @@ void debugListFiles(const std::string& path = ".") {
 TEST(RayGraphicModuleTest, LoadLibrary) {
     debugListFiles();
 #if defined(__APPLE__)
-    const char* libPath = "libraygraphic.dylib";
+    const char* libPath = "./libraygraphic.dylib";
 #elif defined(__linux__)
     const char* libPath = "./libraygraphic.so";
 #else
