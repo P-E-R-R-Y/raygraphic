@@ -88,7 +88,7 @@ TEST(RayGraphicModuleTest, LoadLibrary) {
 #if defined(__APPLE__)
     const char* libPath = "libraygraphic.dylib";
 #elif defined(__linux__)
-    const char* libPath = "libraygraphic.so";
+    const char* libPath = "./libraygraphic.so";
 #else
     GTEST_FAIL() << "Unsupported platform";
 #endif
