@@ -106,9 +106,11 @@ TEST_F(RaylibFixture, IntegrationRun) {
 
     auto endTime = std::chrono::steady_clock::now() + std::chrono::seconds(1);
 
-    while (window->isOpen() && std::chrono::steady_clock::now() < endTime) {
+    while (window->isOpen()) {
         while (window->pollEvent()) {
             window->eventClose();
+            if (std::chrono::steady_clock::now() < endTime)
+                window->close();
         }
 
         window->beginDraw();

@@ -45,10 +45,11 @@ class RayWindow : public graphic::IWindow {
         };
 
         //GLOBAL
+
+        //IsWindowReady for init fails
+        //WindowShouldClose for escape & alt+f4
+        //quitRequested when user ask to close the app under is own condition
         bool isOpen() override {
-            //IsWindowReady for init fails
-            //WindowShouldClose for escape & alt+f4
-            //quitRequested when user ask to close the app under is own condition
             return !IsWindowReady() || !WindowShouldClose() || !quitRequested;
         };
 
