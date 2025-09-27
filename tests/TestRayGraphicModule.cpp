@@ -1,228 +1,126 @@
-/**
- * @file TestRayGraphicModule.cpp
- * @author Perry Chouteau (perry.chouteau@outlook.com)
- * @brief raygraphic dll testing
- * @date 2025-09-26
- */
-
 #include <gtest/gtest.h>
-
 #include <dlfcn.h>
-#include "IGraphicModule.hpp"
 #include <iostream>
-/*
-// function pointer types
-using CreateModuleFn = IModule* (*)();
-using DestroyModuleFn = void (*)(IModule*);
+#include <chrono>
 
-// shared test fixture
-class RaylibEnv : public ::testing::Environment {
-public:
+#include "IGraphicModule.hpp"
+
+// Function pointer types
+using CreateModuleFn = IModule* (*)();
+using DeleteModuleFn = void (*)(IModule*);
+
+class RaylibFixture : public ::testing::Test {
+protected:
     static void* handle;
     static CreateModuleFn createFn;
-    static DestroyModuleFn destroyFn;
+    static DeleteModuleFn deleteFn;
 
-    void SetUp() override {
-        if (handle) return; // already loaded
+    static void SetUpTestSuite() {
 
-        const char* libPath =
-        #if defined(__APPLE__)
-            "libraygraphic.dylib";
-        #else
-            "libraygraphic.so";
-        #endif
+#if defined(__APPLE__)
+        const char* libPath = "libraygraphic.dylib";
+#elif defined(__linux__)
+        const char* libPath = "./libraygraphic.so";
+#else
+        GTEST_FAIL() << "Unsupported platform";
+#endif
 
         handle = dlopen(libPath, RTLD_LAZY);
-        if (!handle) {
-            FAIL() << "dlopen failed: " << dlerror();
-        }
+        ASSERT_NE(handle, nullptr) << "dlopen failed: " << dlerror();
 
         createFn = reinterpret_cast<CreateModuleFn>(dlsym(handle, "createModule"));
-        destroyFn = reinterpret_cast<DestroyModuleFn>(dlsym(handle, "deleteModule"));
-        if (!createFn || !destroyFn) {
-            FAIL() << "dlsym failed: " << dlerror();
-        }
+        ASSERT_NE(createFn, nullptr) << "dlsym(createModule) failed: " << dlerror();
+
+        deleteFn = reinterpret_cast<DeleteModuleFn>(dlsym(handle, "deleteModule"));
+        ASSERT_NE(deleteFn, nullptr) << "dlsym(deleteModule) failed: " << dlerror();
     }
 
-    void TearDown() override {
-        if (handle) {
-            dlclose(handle);
-            handle = nullptr;
-        }
+    static void TearDownTestSuite() {
+        if (handle) dlclose(handle);
+        handle = nullptr;
     }
 };
 
-// static storage
-void* RaylibEnv::handle = nullptr;
-CreateModuleFn RaylibEnv::createFn = nullptr;
-DestroyModuleFn RaylibEnv::destroyFn = nullptr;
+// Static members
+void* RaylibFixture::handle = nullptr;
+CreateModuleFn RaylibFixture::createFn = nullptr;
+DeleteModuleFn RaylibFixture::deleteFn = nullptr;
 
-// Register environment
-::testing::Environment* const raylib_env = ::testing::AddGlobalTestEnvironment(new RaylibEnv);
-*/
-// ------------------ TESTS ------------------
+// ------------------- TESTS -------------------
 
-using CreateModuleFn = IModule* (*)();
-using DestroyModuleFn = void (*)(IModule*);
-
-#include <filesystem>
-#include <iostream>
-
-void debugListFiles(const std::string& path = ".") {
-    std::cerr << "[DEBUG] Listing files in: " << std::filesystem::absolute(path) << std::endl;
-    try {
-        for (const auto& entry : std::filesystem::directory_iterator(path)) {
-            std::cerr << "  " << entry.path().filename().string();
-            if (entry.is_directory()) {
-                std::cerr << "/";
-            }
-            std::cerr << std::endl;
-        }
-    } catch (const std::exception& e) {
-        std::cerr << "[DEBUG] Failed to list files: " << e.what() << std::endl;
-    }
+// Test1: Check library loaded
+TEST_F(RaylibFixture, LoadLibrary) {
+    ASSERT_NE(handle, nullptr);
+    ASSERT_NE(createFn, nullptr);
+    ASSERT_NE(deleteFn, nullptr);
 }
 
-#include <gtest/gtest.h>
-#include <dlfcn.h>
-#include <filesystem>
-#include <cstdlib>
-#include <iostream>
+// Test2: Retrieve module
+TEST_F(RaylibFixture, RetrieveModule) {
+    IModule* mod = createFn();
+    ASSERT_NE(mod, nullptr);
+    deleteFn(mod);
+}
 
-TEST(RayGraphicModuleTest, LoadLibraryDebug) {
-    namespace fs = std::filesystem;
+// Test3: Cast to IGraphicModule and check basic functions
+TEST_F(RaylibFixture, GraphicModuleBasic) {
+    IModule* mod = createFn();
+    ASSERT_NE(mod, nullptr);
 
-    // 1. Show working directory
-    std::cerr << "[DEBUG] Current working dir: " << fs::current_path() << std::endl;
+    IGraphicModule* gm = dynamic_cast<IGraphicModule*>(mod);
+    ASSERT_NE(gm, nullptr);
 
-    // 2. List files in working directory
-    std::cerr << "[DEBUG] Files in current dir:" << std::endl;
-    for (const auto& entry : fs::directory_iterator(".")) {
-        std::cerr << "  " << entry.path().filename().string();
-        if (entry.is_directory()) std::cerr << "/";
-        std::cerr << std::endl;
-    }
+    std::string name = gm->getName();
+    std::string type = gm->getType();
 
-    // 3. Print library path env vars
-    #if defined(__APPLE__)
-        const char* envPath = std::getenv("DYLD_LIBRARY_PATH");
-        std::cerr << "[DEBUG] DYLD_LIBRARY_PATH=" << (envPath ? envPath : "") << std::endl;
-    #else
-        const char* envPath = std::getenv("LD_LIBRARY_PATH");
-        std::cerr << "[DEBUG] LD_LIBRARY_PATH=" << (envPath ? envPath : "") << std::endl;
-    #endif
+    EXPECT_FALSE(name.empty());
+    EXPECT_FALSE(type.empty());
 
-    // 4. Build library path
-    std::string libPath;
-    #if defined(__APPLE__)
-        libPath = "./libraygraphic.dylib";
-    #else
-        libPath = "./libraygraphic.so";
-    #endif
+    deleteFn(mod);
+}
 
-        std::cerr << "[DEBUG] Trying dlopen: " << libPath << std::endl;
+// Test4: Create and delete window
+TEST_F(RaylibFixture, WindowCreation) {
+    IModule* mod = createFn();
+    IGraphicModule* gm = dynamic_cast<IGraphicModule*>(mod);
+    ASSERT_NE(gm, nullptr);
 
-        // 5. Attempt dlopen
-        void* handle = dlopen(libPath.c_str(), RTLD_LAZY);
+    graphic::IWindow* window = gm->createWindow(640, 480, "Test Window");
+    ASSERT_NE(window, nullptr);
 
-        if (!handle) {
-            std::cerr << "[DEBUG] dlopen failed: " << dlerror() << std::endl;
+    auto endTime = std::chrono::steady_clock::now() + std::chrono::seconds(1);
 
-            // 6. Extra debugging on Linux: ldd
-    #if defined(__linux__)
-            std::cerr << "[DEBUG] ldd output:" << std::endl;
-            std::system(("ldd " + libPath).c_str());
-    #endif
+    window->close();
+
+    gm->deleteWindow(window);
+    deleteFn(mod);
+}
+
+// Test5: Integration placeholder (your own logic)
+TEST_F(RaylibFixture, IntegrationRun) {
+    IModule* mod = createFn();
+    IGraphicModule* gm = dynamic_cast<IGraphicModule*>(mod);
+    ASSERT_NE(gm, nullptr);
+
+    // ... your more complex sequence here ...
+    graphic::IWindow* window = gm->createWindow(640, 480, "Test Window");
+    ASSERT_NE(window, nullptr);
+
+    auto endTime = std::chrono::steady_clock::now() + std::chrono::seconds(1);
+
+    while (window->isOpen() && std::chrono::steady_clock::now() < endTime) {
+        while (window->pollEvent()) {
+            window->eventClose();
         }
 
-        ASSERT_NE(handle, nullptr) << "dlopen failed: " << dlerror();
+        window->beginDraw();
+        // ... your drawing code ...
+        window->endDraw();
+    }
+    window->close();
 
-        if (handle) dlclose(handle);
+    gm->deleteWindow(window);
+
+
+    deleteFn(mod);
 }
-
-TEST(RayGraphicModuleTest, LoadLibrary) {
-    debugListFiles();
-#if defined(__APPLE__)
-    const char* libPath = "./libraygraphic.dylib";
-#elif defined(__linux__)
-    const char* libPath = "./libraygraphic.so";
-#else
-    GTEST_FAIL() << "Unsupported platform";
-#endif
-
-    std::cerr << "[DEBUG] Trying dlopen: " << libPath << std::endl;
-
-    void* handle = dlopen(libPath, RTLD_LAZY);
-    ASSERT_NE(handle, nullptr) << "dlopen failed: " << dlerror();
-
-    dlclose(handle);
-}
-
-TEST(RayGraphicModuleTest, ResolveSymbols) {
-#if defined(__APPLE__)
-    const char* libPath = "libraygraphic.dylib";
-#elif defined(__linux__)
-    const char* libPath = "libraygraphic.so";
-#else
-    GTEST_FAIL() << "Unsupported platform";
-#endif
-
-    void* handle = dlopen(libPath, RTLD_LAZY);
-    ASSERT_NE(handle, nullptr) << "dlopen failed: " << dlerror();
-
-    dlerror(); // clear old errors
-
-    CreateModuleFn createFn =
-        reinterpret_cast<CreateModuleFn>(dlsym(handle, "createModule"));
-    const char* err1 = dlerror();
-    ASSERT_TRUE(createFn != nullptr && !err1)
-        << "dlsym(createModule) failed: " << (err1 ? err1 : "null fn");
-
-    DestroyModuleFn destroyFn =
-        reinterpret_cast<DestroyModuleFn>(dlsym(handle, "deleteModule"));
-    const char* err2 = dlerror();
-    ASSERT_TRUE(destroyFn != nullptr && !err2)
-        << "dlsym(deleteModule) failed: " << (err2 ? err2 : "null fn");
-
-    dlclose(handle);
-}
-
-TEST(RayGraphicModuleTest, CreateDeleteModule) {
-#if defined(__APPLE__)
-    const char* libPath = "libraygraphic.dylib";
-#elif defined(__linux__)
-    const char* libPath = "libraygraphic.so";
-#else
-    GTEST_FAIL() << "Unsupported platform";
-#endif
-
-    void* handle = dlopen(libPath, RTLD_LAZY);
-    ASSERT_NE(handle, nullptr) << "dlopen failed: " << dlerror();
-
-    auto createFn = reinterpret_cast<CreateModuleFn>(dlsym(handle, "createModule"));
-    auto destroyFn = reinterpret_cast<DestroyModuleFn>(dlsym(handle, "deleteModule"));
-    ASSERT_NE(createFn, nullptr) << "Missing createModule";
-    ASSERT_NE(destroyFn, nullptr) << "Missing deleteModule";
-
-    IGraphicModule* mod = dynamic_cast<IGraphicModule*>(createFn());
-    ASSERT_NE(mod, nullptr) << "createModule returned null";
-
-    destroyFn(mod);
-
-    dlclose(handle);
-}
-/*
-TEST(RayGraphicModuleTest, LoadLibrary) {
-    ASSERT_NE(RaylibEnv::handle, nullptr);
-    ASSERT_NE(RaylibEnv::createFn, nullptr);
-    ASSERT_NE(RaylibEnv::destroyFn, nullptr);
-}
-
-TEST(RayGraphicModuleTest, CreateDeleteModule) {
-    ASSERT_NE(RaylibEnv::createFn, nullptr);
-    ASSERT_NE(RaylibEnv::destroyFn, nullptr);
-
-    IGraphicModule* m = dynamic_cast<IGraphicModule *>(RaylibEnv::createFn());
-    ASSERT_NE(m, nullptr);
-    RaylibEnv::destroyFn(m);
-}*/
