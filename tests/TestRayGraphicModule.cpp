@@ -83,6 +83,63 @@ void debugListFiles(const std::string& path = ".") {
     }
 }
 
+#include <gtest/gtest.h>
+#include <dlfcn.h>
+#include <filesystem>
+#include <cstdlib>
+#include <iostream>
+
+TEST(RayGraphicModuleTest, LoadLibraryDebug) {
+    namespace fs = std::filesystem;
+
+    // 1. Show working directory
+    std::cerr << "[DEBUG] Current working dir: " << fs::current_path() << std::endl;
+
+    // 2. List files in working directory
+    std::cerr << "[DEBUG] Files in current dir:" << std::endl;
+    for (const auto& entry : fs::directory_iterator(".")) {
+        std::cerr << "  " << entry.path().filename().string();
+        if (entry.is_directory()) std::cerr << "/";
+        std::cerr << std::endl;
+    }
+
+    // 3. Print library path env vars
+    #if defined(__APPLE__)
+        const char* envPath = std::getenv("DYLD_LIBRARY_PATH");
+        std::cerr << "[DEBUG] DYLD_LIBRARY_PATH=" << (envPath ? envPath : "") << std::endl;
+    #else
+        const char* envPath = std::getenv("LD_LIBRARY_PATH");
+        std::cerr << "[DEBUG] LD_LIBRARY_PATH=" << (envPath ? envPath : "") << std::endl;
+    #endif
+
+    // 4. Build library path
+    std::string libPath;
+    #if defined(__APPLE__)
+        libPath = "./libraygraphic.dylib";
+    #else
+        libPath = "./libraygraphic.so";
+    #endif
+
+        std::cerr << "[DEBUG] Trying dlopen: " << libPath << std::endl;
+
+        // 5. Attempt dlopen
+        void* handle = dlopen(libPath.c_str(), RTLD_LAZY);
+
+        if (!handle) {
+            std::cerr << "[DEBUG] dlopen failed: " << dlerror() << std::endl;
+
+            // 6. Extra debugging on Linux: ldd
+    #if defined(__linux__)
+            std::cerr << "[DEBUG] ldd output:" << std::endl;
+            std::system(("ldd " + libPath).c_str());
+    #endif
+        }
+
+        ASSERT_NE(handle, nullptr) << "dlopen failed: " << dlerror();
+
+        if (handle) dlclose(handle);
+}
+
 TEST(RayGraphicModuleTest, LoadLibrary) {
     debugListFiles();
 #if defined(__APPLE__)
