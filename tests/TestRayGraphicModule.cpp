@@ -88,8 +88,6 @@ TEST_F(RaylibFixture, WindowCreation) {
     graphic::IWindow* window = gm->createWindow(640, 480, "Test Window");
     ASSERT_NE(window, nullptr);
 
-    auto endTime = std::chrono::steady_clock::now() + std::chrono::seconds(1);
-
     gm->deleteWindow(window);
     deleteFn(mod);
 }
