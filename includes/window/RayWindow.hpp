@@ -44,7 +44,7 @@ class RayWindow : public graphic::IWindow {
 
         //GLOBAL
         bool isOpen() override {
-            return !WindowShouldClose();
+            return !WindowShouldClose() || !IsWindowReady();
         };
 
         void close() override {

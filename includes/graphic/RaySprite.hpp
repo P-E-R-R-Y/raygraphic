@@ -37,7 +37,7 @@ class RaySprite : public graphic::ISprite {
         }
 
         bool isReady() const override {
-            return IsTextureReady(_texture);
+            return IsTextureValid(_texture);
         }
 
         Vector4f getBounds() const override {

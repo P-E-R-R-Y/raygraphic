@@ -39,7 +39,7 @@ class RayText: public graphic::IText {
         ~RayText() override {}
 
         bool isReady() const override {
-            return IsFontReady(_font);
+            return IsFontValid(_font);
         }
 
         void setText(const std::string text) override {

@@ -19,6 +19,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y cmake g++
 
+#      - name: Setup X virtual framebuffer for trying to display things..
+#        run: sudo apt-get install -y xvfb
+
       # . Installer Raylib deps
       - name: Install raylib dependencies
         run: |
@@ -37,8 +40,8 @@ jobs:
 
       # 5️⃣ Lancer les tests avec GoogleTest
       - name: Run tests
-        run: ctest --test-dir build --output-on-failure
-
+        run: ctest --test-dir build --output-on-failure # xvfb-run -a ....
+          
       # 6️⃣ Récupérer l'artifact
       - name: Upload build folder
         uses: actions/upload-artifact@v4

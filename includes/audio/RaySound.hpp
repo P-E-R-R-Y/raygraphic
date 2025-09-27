@@ -31,7 +31,7 @@ class RaySound: public graphic::ISound {
         }
 
         bool isReady() const override {
-            return true;
+            return IsSoundValid(_sound);
         }
 
         /**

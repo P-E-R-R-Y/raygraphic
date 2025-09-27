@@ -1,5 +1,5 @@
 set(name raylib)
-set (RAYLIB_VERSION 5.0)
+set (RAYLIB_VERSION 5.5)
 
 include(FetchContent)
 if (NOT ${name}_FOUND) # If there's none, fetch and build raylib

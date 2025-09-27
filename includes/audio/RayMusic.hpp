@@ -43,7 +43,7 @@ class RayMusic: public graphic::IMusic {
         }
 
         bool isReady() const override {
-            return true;
+            return IsMusicValid(_music);
         }
 
         /**
