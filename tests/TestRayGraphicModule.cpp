@@ -90,8 +90,6 @@ TEST_F(RaylibFixture, WindowCreation) {
 
     auto endTime = std::chrono::steady_clock::now() + std::chrono::seconds(1);
 
-    window->close();
-
     gm->deleteWindow(window);
     deleteFn(mod);
 }
@@ -117,7 +115,6 @@ TEST_F(RaylibFixture, IntegrationRun) {
         // ... your drawing code ...
         window->endDraw();
     }
-    window->close();
 
     gm->deleteWindow(window);
 
