@@ -28,12 +28,16 @@ class RayKeyboard : public graphic::IKeyboard {
         RayKeyboard(graphic::IEvent *event) {
         }
 
-        ~RayKeyboard() {
-        }
+        ~RayKeyboard() override = default;
 
         std::vector<Keys> whichKey() const override {
             std::vector<Keys> keys;
             
+            for (const auto& [key, rayKey] : _keys) {
+                if (IsKeyPressed(rayKey)) {
+                    keys.push_back(key);
+                }
+            }
             return keys;
         }
 
@@ -52,8 +56,6 @@ class RayKeyboard : public graphic::IKeyboard {
         bool isKeyUp(Keys key) const override {
             return IsKeyUp(_keys.at(key));
         }
-
-        void update() override {};
 
     private:
         const std::unordered_map<IKeyboard::Keys, int> _keys = {

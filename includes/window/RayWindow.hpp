@@ -125,7 +125,7 @@ class RayWindow : public graphic::IWindow {
 //2D
 void RayWindow::drawPoly(graphic::IPolygon *polygon) {
     RayPolygon *rayPolygon = static_cast<RayPolygon *>(polygon);
-    std::vector<graphic::triangle_t> triangles = rayPolygon->_triangles;
+    std::vector<graphic::Triangle> triangles = rayPolygon->_triangles;
 
     std::cout << "StartDraw" << std::endl;
     for (int i = 0; i < triangles.size(); i++) {

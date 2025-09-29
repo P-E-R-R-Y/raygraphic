@@ -87,7 +87,7 @@ private:
                         }
                     }
                     if (isEar) {
-                        _triangles.push_back(graphic::triangle_t{A, B, C});
+                        _triangles.push_back(graphic::Triangle{A, B, C});
                         tmp.erase(tmp.begin() + (i+1) % tmp.size());
                         break; // restart after ear clip
                     }
@@ -101,7 +101,7 @@ private:
 
     std::vector<RaylibVector2> _points;     // for rendering with Raylib
     std::vector<Vector2f> _systemPoints;    // for logic/geometry
-    std::vector<graphic::triangle_t> _triangles;
+    std::vector<graphic::Triangle> _triangles;
 };
 
 #endif /* !RAYPOLYGON_HPP_ */

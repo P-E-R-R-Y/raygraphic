@@ -17,7 +17,6 @@
 
 //Interface
 #include "IMouse.hpp"
-#include "RayEvent.hpp"
 
 /**
  * @brief Raylib Mouse class
@@ -28,8 +27,7 @@ class RayMouse : public graphic::IMouse {
         RayMouse(graphic::IEvent *event) {
         }
 
-        ~RayMouse() {
-        }
+        ~RayMouse() override = default;
 
         bool isButtonPressed(Buttons key) const override {
             return IsMouseButtonPressed(key);
@@ -54,8 +52,6 @@ class RayMouse : public graphic::IMouse {
         float GetMouseWheelMove() const override {
             return GetMouseWheelMove();
         }
-
-        void update() override {};
 
     private:
 };
