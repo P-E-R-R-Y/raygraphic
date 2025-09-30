@@ -50,7 +50,7 @@ class RayWindow : public graphic::IWindow {
         //WindowShouldClose for escape & alt+f4
         //quitRequested when user ask to close the app under is own condition
         bool isOpen() override {
-            return !IsWindowReady() && !WindowShouldClose() && !quitRequested;
+            return IsWindowReady() && !WindowShouldClose() && !quitRequested;
         };
 
         void close() override {

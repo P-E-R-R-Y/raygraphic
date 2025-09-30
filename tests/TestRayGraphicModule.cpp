@@ -2,6 +2,7 @@
 #include <dlfcn.h>
 #include <iostream>
 #include <chrono>
+#include <thread>
 
 #include "IGraphicModule.hpp"
 
@@ -102,15 +103,15 @@ TEST_F(RaylibFixture, IntegrationRun) {
     graphic::IWindow* window = gm->createWindow(640, 480, "Test Window");
     graphic::IEvent* event = gm->createEvent();
     ASSERT_NE(window, nullptr);
-
     auto endTime = std::chrono::steady_clock::now() + std::chrono::seconds(1);
 
     window->linkEvent(event);
     while (window->isOpen()) {
         while (window->pollEvent()) {
             window->eventClose();
-            if (std::chrono::steady_clock::now() > endTime)
-                window->close();
+        }
+        if (std::chrono::steady_clock::now() > endTime) {
+            window->close();
         }
 
         window->beginDraw();
