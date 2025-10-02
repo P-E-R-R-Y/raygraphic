@@ -84,7 +84,7 @@ target_link_libraries(${PROJECT_NAME}_tests
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME}_tests
-  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
 )
 
 #set_tests_properties(${PROJECT_NAME}_tests PROPERTIES
