@@ -28,8 +28,8 @@ class RayText: public graphic::IText {
         RayText(std::string data, std::string font) {
             _data = data;
             _position = {0, 0};
-            _color = RaylibColor{255, 255, 255, 255};
-            _font = LoadFont(font.c_str());
+            _color = raylib::Color{255, 255, 255, 255};
+            _font = raylib::LoadFont(font.c_str());
             _size = 20;
             _spacing = 1;
             _rotation = 0;
@@ -39,7 +39,7 @@ class RayText: public graphic::IText {
         ~RayText() override {}
 
         bool isReady() const override {
-            return IsFontValid(_font);
+            return raylib::IsFontValid(_font);
         }
 
         void setText(const std::string text) override {
@@ -52,7 +52,7 @@ class RayText: public graphic::IText {
         }
 
         void setFont(std::string font) override {
-            _font = LoadFont(font.c_str());
+            _font = raylib::LoadFont(font.c_str());
             updateOrigin();
         }
 
@@ -66,7 +66,7 @@ class RayText: public graphic::IText {
         
 
         void setTextColor(Color color) override {
-            _color = RaylibColor{static_cast<unsigned char>(color.r), static_cast<unsigned char>(color.g), static_cast<unsigned char>(color.b),static_cast<unsigned char>(color.a)};
+            _color = raylib::Color{static_cast<unsigned char>(color.r), static_cast<unsigned char>(color.g), static_cast<unsigned char>(color.b),static_cast<unsigned char>(color.a)};
         } 
 
         Color getTextColor() const override {
@@ -74,7 +74,7 @@ class RayText: public graphic::IText {
         } 
 
         void setPosition(Vector2f position) override {
-            _position = RaylibVector2{static_cast<float>(position.x), static_cast<float>(position.y)};
+            _position = raylib::Vector2{static_cast<float>(position.x), static_cast<float>(position.y)};
         }
         Vector2f getPosition() const override {
             return Vector2f{_position.x, _position.y};
@@ -93,16 +93,16 @@ class RayText: public graphic::IText {
     private:
 
         void updateOrigin() {
-            const RaylibVector2 textSize = MeasureTextEx(_font, _data.c_str(), _size, _spacing);
+            const raylib::Vector2 textSize = raylib::MeasureTextEx(_font, _data.c_str(), _size, _spacing);
             _origin = { textSize.x / 2, textSize.y / 2 };
         }
 
         std::string _data;
-        RaylibVector2 _position;
-        RaylibColor _color;
-        Font _font;
+        raylib::Vector2 _position;
+        raylib::Color _color;
+        raylib::Font _font;
         unsigned int _size;
-        RaylibVector2 _origin;
+        raylib::Vector2 _origin;
         float _rotation;
         float _spacing;
 

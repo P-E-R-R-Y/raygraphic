@@ -29,7 +29,7 @@ class RayMusic: public graphic::IMusic {
          * @param path 
          */
         RayMusic(std::string path) {
-            _music = LoadMusicStream(path.c_str());
+            _music = raylib::LoadMusicStream(path.c_str());
             _pause = false;
             _volume = 1.0f;
         }
@@ -39,11 +39,11 @@ class RayMusic: public graphic::IMusic {
          * 
          */
         ~RayMusic() override {
-            UnloadMusicStream(_music);
+            raylib::UnloadMusicStream(_music);
         }
 
         bool isReady() const override {
-            return IsMusicValid(_music);
+            return raylib::IsMusicValid(_music);
         }
 
         /**
@@ -51,9 +51,9 @@ class RayMusic: public graphic::IMusic {
          */
         void play() override {
             if (_pause) {
-                ResumeMusicStream(_music);
+                raylib::ResumeMusicStream(_music);
             } else {
-                PlayMusicStream(_music);
+                raylib::PlayMusicStream(_music);
             }
         }
 
@@ -64,7 +64,7 @@ class RayMusic: public graphic::IMusic {
         void pause() override {
             if (!_pause) {
                 _pause = true;
-                PauseMusicStream(_music);
+                raylib::PauseMusicStream(_music);
             }
         }
 
@@ -73,14 +73,14 @@ class RayMusic: public graphic::IMusic {
          * 
          */
         void stop() override {
-            StopMusicStream(_music);
+            raylib::StopMusicStream(_music);
         }
 
         void update() override {
-            UpdateMusicStream(_music);
+            raylib::UpdateMusicStream(_music);
 
-            if (!_loop && IsMusicStreamPlaying(_music) && 
-                GetMusicTimePlayed(_music) >= GetMusicTimeLength(_music)) {
+            if (!_loop && raylib::IsMusicStreamPlaying(_music) && 
+                raylib::GetMusicTimePlayed(_music) >= raylib::GetMusicTimeLength(_music)) {
                 this->stop();
             }
         }
@@ -92,7 +92,7 @@ class RayMusic: public graphic::IMusic {
          */
         void setVolume(float volume) override {
             _volume = volume;
-            SetMusicVolume(_music, volume);
+            raylib::SetMusicVolume(_music, volume);
         }
 
         /**
@@ -129,7 +129,7 @@ class RayMusic: public graphic::IMusic {
          * @param position 
          */
         void setTime(float position) override {
-            SeekMusicStream(_music, position);
+            raylib::SeekMusicStream(_music, position);
         }
 
         /**
@@ -138,7 +138,7 @@ class RayMusic: public graphic::IMusic {
          * @return float 
          */
         float getTime() const override {
-            return GetMusicTimePlayed(_music);
+            return raylib::GetMusicTimePlayed(_music);
         }
 
         /**
@@ -147,12 +147,12 @@ class RayMusic: public graphic::IMusic {
          * @return float 
          */
         float getLength() const override {
-            return GetMusicTimeLength(_music);
+            return raylib::GetMusicTimeLength(_music);
         }
 
     private:
 
-        Music _music;
+        raylib::Music _music;
         bool _loop;
         bool _pause;
         float _volume;

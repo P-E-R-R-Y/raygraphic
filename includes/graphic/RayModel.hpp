@@ -46,8 +46,8 @@ class RayModel : public graphic::IModel {
         friend class RayWindow;
 
     private:
-        RaylibVector3 _position;
-        RaylibVector3 _size;
+        raylib::Vector3 _position;
+        raylib::Vector3 _size;
 };
 
 #endif /* !RAYMODEL_HPP_ */

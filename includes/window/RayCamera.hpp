@@ -31,12 +31,12 @@ class RayCamera : public graphic::ICamera {
          */
         RayCamera() {
             _camera = { 0 };
-            _camera.position = (RaylibVector3){ 4.0f, 4.0f, 4.0f };    // Camera position
-            _camera.target = (RaylibVector3){ 0.0f, 0.0f, 0.0f };      // Camera looking at point
-            _camera.up = (RaylibVector3){ 0.f, 1.f, 0.0f };          // Camera up vector (rotation towards target)
+            _camera.position = (raylib::Vector3){ 4.0f, 4.0f, 4.0f };    // Camera position
+            _camera.target = (raylib::Vector3){ 0.0f, 0.0f, 0.0f };      // Camera looking at point
+            _camera.up = (raylib::Vector3){ 0.f, 1.f, 0.0f };          // Camera up vector (rotation towards target)
             _camera.fovy = 60.0f;                                // Camera field-of-view Y
-            _camera.projection = CAMERA_PERSPECTIVE;             // Camera projection type
-            _mode = CAMERA_FREE;
+            _camera.projection = raylib::CAMERA_PERSPECTIVE;             // Camera projection type
+            _mode = raylib::CAMERA_FREE;
         }
 
         /**
@@ -77,7 +77,7 @@ class RayCamera : public graphic::ICamera {
          * @param mode 
          */
         void setMode(ICamera::Mode mode) override {
-            _mode = CameraMode(mode);
+            _mode = raylib::CameraMode(mode);
         }
         
         /**
@@ -105,9 +105,9 @@ class RayCamera : public graphic::ICamera {
          */
         ICamera::Projection getProjection() const override {
             switch(_camera.projection) {
-                case PERSPECTIVE:
+                case raylib::CAMERA_PERSPECTIVE:
                     return ICamera::PERSPECTIVE;
-                case CAMERA_ORTHOGRAPHIC:
+                case raylib::CAMERA_ORTHOGRAPHIC:
                     return ICamera::ORTHOGRAPHIC;
             }
             return ICamera::PERSPECTIVE;
@@ -121,9 +121,9 @@ class RayCamera : public graphic::ICamera {
         void setProjection(ICamera::Projection projection) override {
             switch(projection) {
                 case ICamera::PERSPECTIVE:
-                    _camera.projection = CAMERA_PERSPECTIVE;
+                    _camera.projection = raylib::CAMERA_PERSPECTIVE;
                 case ICamera::ORTHOGRAPHIC:
-                    _camera.projection = CAMERA_ORTHOGRAPHIC;
+                    _camera.projection = raylib::CAMERA_ORTHOGRAPHIC;
             }
             _camera.projection = projection;
         }
@@ -167,8 +167,8 @@ class RayCamera : public graphic::ICamera {
         friend class RayWindow;
 
     private:
-        Camera _camera;
-        CameraMode _mode;
+        raylib::Camera _camera;
+        raylib::CameraMode _mode;
 };
 
 #endif /* !RAYMODEL2_HPP_ */

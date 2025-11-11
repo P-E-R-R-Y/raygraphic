@@ -30,27 +30,27 @@ class RayMouse : public graphic::IMouse {
         ~RayMouse() override = default;
 
         bool isButtonPressed(Buttons key) const override {
-            return IsMouseButtonPressed(key);
+            return raylib::IsMouseButtonPressed(key);
         }
         bool isButtonDown(Buttons key) const override {
-            return IsMouseButtonDown(key);
+            return raylib::IsMouseButtonDown(key);
         }
         bool isButtonReleased(Buttons key) const override {
-            return IsMouseButtonReleased(key);
+            return raylib::IsMouseButtonReleased(key);
         }
         bool isButtonUp(Buttons key) const override {
-            return IsMouseButtonUp(key);
+            return raylib::IsMouseButtonUp(key);
         }
         
         Vector2f getPosition() const override {
-            return {float(GetMouseX()), float(GetMouseY())};
+            return {float(raylib::GetMouseX()), float(raylib::GetMouseY())};
         }
         void setPosition(Vector2f position) override {
-            SetMousePosition(int(position.x), int(position.y));
+            raylib::SetMousePosition(int(position.x), int(position.y));
         }
 
         float GetMouseWheelMove() const override {
-            return GetMouseWheelMove();
+            return raylib::GetMouseWheelMove();
         }
 
     private:

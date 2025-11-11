@@ -22,23 +22,23 @@ class RaySound: public graphic::ISound {
     public:
 
         RaySound(std::string path) {
-            _sound = LoadSound(path.c_str());
+            _sound = raylib::LoadSound(path.c_str());
             _volume = 1.0f;
         }
 
         ~RaySound() override {
-            UnloadSound(_sound);
+            raylib::UnloadSound(_sound);
         }
 
         bool isReady() const override {
-            return IsSoundValid(_sound);
+            return raylib::IsSoundValid(_sound);
         }
 
         /**
          * @brief play the sound
          */
         void play() override {
-            PlaySound(_sound);
+            raylib::PlaySound(_sound);
         }
 
         /**
@@ -46,7 +46,7 @@ class RaySound: public graphic::ISound {
          * 
          */
         void pause() override {
-            PauseSound(_sound);
+            raylib::PauseSound(_sound);
         }
 
         /**
@@ -54,7 +54,7 @@ class RaySound: public graphic::ISound {
          * 
          */
         void stop() override {
-            StopSound(_sound);
+            raylib::StopSound(_sound);
         }
 
         /**
@@ -64,7 +64,7 @@ class RaySound: public graphic::ISound {
          */
         void setVolume(float volume) override {
             _volume = volume;
-            SetSoundVolume(_sound, volume);
+            raylib::SetSoundVolume(_sound, volume);
         }
 
         /**
@@ -78,7 +78,7 @@ class RaySound: public graphic::ISound {
 
     private:
 
-        Sound _sound;
+        raylib::Sound _sound;
         float _volume;
 };
 

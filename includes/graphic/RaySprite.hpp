@@ -26,25 +26,25 @@ class RaySprite : public graphic::ISprite {
 
     public:
         RaySprite(std::string path) {
-            _texture = LoadTexture(path.c_str());
+            _texture = raylib::LoadTexture(path.c_str());
             _position = {0, 0};
             _scale = {1, 1};
             _crop = {0, 0, float(_texture.width), float(_texture.height)};
         }
 
         ~RaySprite() {
-            UnloadTexture(_texture);
+            raylib::UnloadTexture(_texture);
         }
 
         bool isReady() const override {
-            return IsTextureValid(_texture);
+            return raylib::IsTextureValid(_texture);
         }
 
-        Vector4f getBounds() const override {
+        Rect<float> getBounds() const override {
             return {_position.x, _position.y, float(_texture.width), float(_texture.height)};
         }
 
-        void setCrop(Vector4f rect) override {
+        void setCrop(Rect<float> rect) override {
             _crop = {float(rect.x), float(rect.y), float(rect.w), float(rect.h)};
         }
 
@@ -68,20 +68,28 @@ class RaySprite : public graphic::ISprite {
         }
 
         Vector2f getSize() const override {
-            return { float(_texture.width) * _scale.x, float(_texture.height) * _scale.y };
+            return {
+                static_cast<float>(_texture.width) * _scale.x,
+                static_cast<float>(_texture.height) * _scale.y
+            };
         }
 
+        // 🔹 Set absolute size in pixels (based on texture dimensions)
         void setSize(Vector2f size) override {
-            _scale = {float(this->getSize().x/float(_texture.width)), float(this->getSize().y/float(_texture.height))};
+            if (_texture.width == 0 || _texture.height == 0) return;
+
+            _scale.x = size.x / static_cast<float>(_texture.width);
+            _scale.y = size.y / static_cast<float>(_texture.height);
         }
+            
 
         friend class RayWindow;
 
     private:
-        Texture2D _texture;
-        RaylibVector2 _position;
-        RaylibVector2 _scale;
-        Rectangle _crop;
+        raylib::Texture2D _texture;
+        raylib::Vector2 _position;
+        raylib::Vector2 _scale;
+        raylib::Rectangle _crop;
         float _rotation;
 
         //your variables here
