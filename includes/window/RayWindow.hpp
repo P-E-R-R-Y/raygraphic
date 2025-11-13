@@ -149,14 +149,15 @@ void RayWindow::drawSprite(graphic::ISprite *sprite) {
 void RayWindow::beginMode3(graphic::ICamera *camera) {
     RayCamera *raycamera = static_cast<RayCamera *>(camera);
 
-    BeginMode3D(raycamera->_camera);
+    raylib::UpdateCamera(&raycamera->_camera, raycamera->_mode);
+
+    raylib::BeginMode3D(raycamera->_camera);
 };
 
 void RayWindow::drawModel(graphic::IModel *model) {
     RayModel *raymodel = static_cast<RayModel *>(model);
 
-    raylib::DrawCubeV(raymodel->_position, raymodel->_size, { 255, 0, 0, 255 });
-    raylib::DrawCubeWiresV(raymodel->_position, raymodel->_size, { 0, 0, 0, 255 });
+    raylib::DrawModelEx(raymodel->_model, raymodel->_position, {0, 1, 0}, 0, raymodel->_scale, raylib::WHITE);
 };
 
 void RayWindow::endMode3() {

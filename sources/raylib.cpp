@@ -65,8 +65,8 @@ extern "C" void deleteWindow(graphic::IWindow *window) {
  * @param position
  * @return graphic::ICamera*
  */
-extern "C" graphic::ICamera *createCamera(Vector3f position) {
-    return new RayCamera();
+extern "C" graphic::ICamera *createCamera(Vector3f position, Vector3f target, float fov) {
+    return new RayCamera(position, target, fov);
 }
 
 /**
@@ -200,8 +200,8 @@ extern "C" void deleteText(graphic::IText *text) {
  * 
  * @return graphic::IModel*
  */
-extern "C" graphic::IModel *createModel() {
-    return new RayModel();
+extern "C" graphic::IModel *createModel(std::string path) {
+    return new RayModel(path);
 }
 
 /**

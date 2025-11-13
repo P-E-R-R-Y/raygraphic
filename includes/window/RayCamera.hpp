@@ -29,14 +29,14 @@ class RayCamera : public graphic::ICamera {
         /**
          * @brief Construct a new Ray Camera object
          */
-        RayCamera() {
+        RayCamera(Vector3f pos = {100.0f, 100.0f, 100.0f}, Vector3f target = {0.f, 0.f, 0.f}, float fov = 45.f) {
             _camera = { 0 };
-            _camera.position = (raylib::Vector3){ 4.0f, 4.0f, 4.0f };    // Camera position
-            _camera.target = (raylib::Vector3){ 0.0f, 0.0f, 0.0f };      // Camera looking at point
+            _camera.position = (raylib::Vector3){ (float)pos.x, (float)pos.y, (float)pos.z };    // Camera position
+            _camera.target = (raylib::Vector3){ (float)target.x, (float)target.y, (float)target.z };      // Camera looking at point
             _camera.up = (raylib::Vector3){ 0.f, 1.f, 0.0f };          // Camera up vector (rotation towards target)
-            _camera.fovy = 60.0f;                                // Camera field-of-view Y
+            _camera.fovy = fov;                                // Camera field-of-view Y
             _camera.projection = raylib::CAMERA_PERSPECTIVE;             // Camera projection type
-            _mode = raylib::CAMERA_FREE;
+            _mode = raylib::CAMERA_CUSTOM;
         }
 
         /**
@@ -68,7 +68,18 @@ class RayCamera : public graphic::ICamera {
          * @return ICamera::Mode 
          */
         ICamera::Mode getMode() const override {
-            return ICamera::Mode(_mode);
+            switch(_mode) {
+                case raylib::CameraMode::CAMERA_CUSTOM:
+                    return ICamera::Mode::CUSTOM;
+                case raylib::CameraMode::CAMERA_FREE:
+                    return ICamera::Mode::FREE;
+                case raylib::CameraMode::CAMERA_ORBITAL:
+                    return ICamera::Mode::ORBITAL;
+                case raylib::CameraMode::CAMERA_FIRST_PERSON:
+                    return ICamera::Mode::FIRST_PERSON;
+                case raylib::CameraMode::CAMERA_THIRD_PERSON:
+                    return ICamera::Mode::THIRD_PERSON;
+            }
         }
 
         /**
@@ -77,9 +88,20 @@ class RayCamera : public graphic::ICamera {
          * @param mode 
          */
         void setMode(ICamera::Mode mode) override {
-            _mode = raylib::CameraMode(mode);
+            switch(mode) {
+                case ICamera::Mode::CUSTOM:
+                    _mode = raylib::CameraMode::CAMERA_CUSTOM;
+                case ICamera::Mode::FREE:
+                    _mode = raylib::CameraMode::CAMERA_FREE;
+                case ICamera::Mode::ORBITAL:
+                    _mode = raylib::CameraMode::CAMERA_ORBITAL;
+                case ICamera::Mode::FIRST_PERSON:
+                    _mode = raylib::CameraMode::CAMERA_FIRST_PERSON;
+                case ICamera::Mode::THIRD_PERSON:
+                    _mode = raylib::CameraMode::CAMERA_THIRD_PERSON;
+            }
         }
-        
+
         /**
          * @brief Get the Position object
          * 

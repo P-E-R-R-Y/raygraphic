@@ -48,15 +48,16 @@ public:
 
     /* 3D */
 
-    graphic::ICamera *createCamera() override {
-        return new RayCamera();
+    graphic::ICamera *createCamera(Vector3f position, Vector3f target, float fov) override {
+        return new RayCamera(position, target, fov);
     }
+    
     void deleteCamera(graphic::ICamera *camera) override {
         delete camera;
     }
     
-    graphic::IModel *createModel() override {
-        return new RayModel();
+    graphic::IModel *createModel(std::string path) override {
+        return new RayModel(path);
     }
     void deleteModel(graphic::IModel *model) override {
         delete model;
